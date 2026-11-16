@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension">
         <xpath expr="//button[@name='done']" position="attributes">
-            <attribute name="t-if">!splittedOrder and !hideNewOrderButton</attribute>
+            <attribute name="t-if">!this.splittedOrder and !this.hideNewOrderButton</attribute>
         </xpath>
         <xpath expr="//div[@id='action_btn_mobile']//div[@name='done']" position="attributes">
-            <attribute name="t-if">!splittedOrder and !hideNewOrderButton</attribute>
+            <attribute name="t-if">!this.splittedOrder and !this.hideNewOrderButton</attribute>
         </xpath>
     </t>
 </templates>

@@ -1,21 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <record id="sbl_hr_employee_form_inherit" model="ir.ui.view">
-        <field name="name">hr.employee.form.inherit</field>
+    <record id="hr_employee_form_inherit_pos_access_rights" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.pos.access.rights</field>
         <field name="model">hr.employee</field>
         <field name="inherit_id" ref="hr.view_employee_form"/>
         <field name="arch" type="xml">
-            <notebook>
+            <notebook position="inside">
                 <page name="sbl_pos_access_rights" string="POS Access Rights">
-                    <group name="sbl_pos_order_management" string="Order Management">
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button name="action_pos_preset_full_access"
+                                string="Grant Full POS Access"
+                                type="object"
+                                class="btn btn-outline-success btn-sm"/>
+                        <button name="action_pos_preset_standard_cashier"
+                                string="Preset: Standard Cashier"
+                                type="object"
+                                class="btn btn-outline-primary btn-sm"/>
+                        <button name="action_pos_preset_order_taker"
+                                string="Preset: Order Taker (No Payment)"
+                                type="object"
+                                class="btn btn-outline-secondary btn-sm"/>
+                    </div>
+
+                    <group name="sbl_pos_order_management" string="Order Management &amp; Navbar">
                         <group>
                             <field name="sbl_hide_pos_new_order_button" widget="boolean_toggle"/>
                             <field name="sbl_hide_pos_delete_order_button" widget="boolean_toggle"/>
                             <field name="sbl_hide_pos_actions_button" widget="boolean_toggle"/>
-                        </group>
-                        <group>
                             <field name="sbl_hide_pos_customer_selection_button" widget="boolean_toggle"/>
                             <field name="sbl_hide_pos_payment" widget="boolean_toggle"/>
+                            <field name="sbl_pos_own_orders_only" widget="boolean_toggle"/>
+                        </group>
+                        <group>
                             <field name="sbl_hide_pos_note_button" widget="boolean_toggle"/>
                             <field name="sbl_hide_pos_transfer_order_button" widget="boolean_toggle"/>
                             <field name="sbl_hide_pos_barcode_button" widget="boolean_toggle"/>
@@ -24,22 +40,27 @@
                             <field name="sbl_hide_pos_product_info" widget="boolean_toggle"/>
                         </group>
                     </group>
-                    <group name="sbl_pos_numpad" string="Numpad">
+
+                    <group name="sbl_pos_numpad" string="Numpad &amp; Pricing Controls">
                         <group>
                             <field name="sbl_hide_pos_numpad" widget="boolean_toggle"/>
                             <field name="sbl_disable_pos_change_price" widget="boolean_toggle" invisible="sbl_hide_pos_numpad"/>
                             <field name="sbl_disable_pos_qty" widget="boolean_toggle" invisible="sbl_hide_pos_numpad"/>
+                            <field name="sbl_disable_pos_line_delete" widget="boolean_toggle" invisible="sbl_hide_pos_numpad"/>
                         </group>
                         <group>
                             <field name="sbl_disable_pos_numpad_plus_minus" widget="boolean_toggle" invisible="sbl_hide_pos_numpad"/>
                             <field name="sbl_disable_pos_discount_button" widget="boolean_toggle" invisible="sbl_hide_pos_numpad"/>
+                            <field name="sbl_pos_max_discount_pct" invisible="sbl_hide_pos_numpad or sbl_disable_pos_discount_button"/>
                         </group>
                     </group>
+
                     <group name="sbl_pos_dropdown_navbar" string="Dropdown Navbar Menu">
                         <group>
                             <field name="sbl_hide_pos_dropdown_navbar" widget="boolean_toggle"/>
                         </group>
                     </group>
+
                     <group name="sbl_pos_dropdown_items" string="Dropdown Menu Items" invisible="sbl_hide_pos_dropdown_navbar">
                         <group>
                             <field name="sbl_hide_pos_dropdown_install_app" widget="boolean_toggle"/>
@@ -60,4 +81,3 @@
         </field>
     </record>
 </odoo>
-

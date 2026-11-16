@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <!-- Handled via OrderTabs patch instead of ListContainer XML inheritance -->
+    <!-- New Order (+) button visibility is controlled via the OrderTabs patch in sbl_order_tabs.xml -->
 </templates>

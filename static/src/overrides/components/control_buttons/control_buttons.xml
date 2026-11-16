@@ -1,17 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="sensible_pos_access_rights_employee.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
+    <t t-name="pos_access_rights_employee.ControlButtons" t-inherit="point_of_sale.ControlButtons" t-inherit-mode="extension">
         <xpath expr="//SelectPartnerButton" position="attributes">
-            <attribute name="t-if">(!pos.cashier or !pos.cashier.sbl_hide_pos_customer_selection_button) and !props.showRemainingButtons</attribute>
+            <attribute name="t-if">(!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_customer_selection_button) and !this.props.showRemainingButtons</attribute>
         </xpath>
         <xpath expr="//t[contains(@t-if, 'showRemainingButtons')]//InternalNoteButton" position="attributes">
-            <attribute name="t-if">(!pos.cashier or !pos.cashier.sbl_hide_pos_note_button)</attribute>
+            <attribute name="t-if">(!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_note_button)</attribute>
         </xpath>
         <xpath expr="//button[@t-on-click='() => this.pos.clickSaveOrder()']" position="attributes">
-            <attribute name="t-if">(!pos.cashier or !pos.cashier.sbl_hide_pos_transfer_order_button) and !props.showRemainingButtons and !ui.isSmall</attribute>
+            <attribute name="t-if">(!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_transfer_order_button) and !this.props.showRemainingButtons and !this.ui.isSmall</attribute>
         </xpath>
-        <xpath expr="//button[@t-on-click='props.onClickMore']" position="attributes">
-            <attribute name="t-if">(!pos.cashier or !pos.cashier.sbl_hide_pos_actions_button) and !props.showRemainingButtons and !ui.isSmall and props.onClickMore</attribute>
+        <xpath expr="//button[@t-on-click='props.onClickMore' or @t-on-click='this.props.onClickMore']" position="attributes">
+            <attribute name="t-if">(!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_actions_button) and !this.props.showRemainingButtons and !this.ui.isSmall and this.props.onClickMore</attribute>
         </xpath>
     </t>
 </templates>

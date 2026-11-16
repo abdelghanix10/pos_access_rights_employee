@@ -5,9 +5,8 @@ import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 
 patch(ListContainer.prototype, {
-    setup() {
-        super.setup();
-        this.pos = useService("pos");
-    },
+  setup() {
+    super.setup(...arguments);
+    this.pos = useService("pos");
+  },
 });
-

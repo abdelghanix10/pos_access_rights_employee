@@ -1,35 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="point_of_sale.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <!-- Hide the entire Dropdown menu when sbl_hide_pos_dropdown_navbar is true -->
+    <t t-name="pos_access_rights_employee.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
+        <!-- Hide entire Dropdown menu -->
         <xpath expr="//Dropdown" position="attributes">
             <attribute name="t-if">!this.pos.cashier?.sbl_hide_pos_dropdown_navbar</attribute>
         </xpath>
 
         <!-- Hide Barcode Scanner button in navbar -->
-        <xpath expr="//button[@t-on-click='onClickScan']" position="attributes">
-            <attribute name="t-if">(isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.state.current) and !pos.config.module_pos_restaurant) and (!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_barcode_button)</attribute>
+        <xpath expr="//button[contains(@t-on-click, 'onClickScan')]" position="attributes">
+            <attribute name="t-if">(this.isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.state.current) and !this.pos.config.module_pos_restaurant) and (!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_barcode_button)</attribute>
         </xpath>
 
         <!-- Hide Search Input in navbar -->
         <xpath expr="//Input" position="attributes">
-            <attribute name="t-if">pos.showSearchButton() and (!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_search_input)</attribute>
+            <attribute name="t-if">this.pos.showSearchButton() and (!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_search_input)</attribute>
         </xpath>
 
-        <!-- Hide Customer Display in dropdown -->
-        <xpath expr="//span[@t-on-click='openCustomerDisplay']" position="attributes">
+        <!-- Hide Customer Display -->
+        <xpath expr="//span[contains(@t-on-click, 'openCustomerDisplay')]" position="attributes">
             <attribute name="t-if">(!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_customer_display)</attribute>
         </xpath>
 
         <!-- Hide Install App dropdown item -->
         <xpath expr="//DropdownItem[contains(@onSelected, 'window.open(this.appUrl)')]" position="attributes">
-            <attribute name="t-if">!isDisplayStandalone and this.pos.cashier?._role != 'minimal' and !this.pos.cashier?.sbl_hide_pos_dropdown_install_app</attribute>
+            <attribute name="t-if">!this.isDisplayStandalone and this.pos.cashier?._role != 'minimal' and !this.pos.cashier?.sbl_hide_pos_dropdown_install_app</attribute>
         </xpath>
 
         <!-- Hide Cash In/Out dropdown item -->
         <xpath expr="//DropdownItem[contains(@onSelected, 'this.pos.cashMove()')]" position="attributes">
-            <attribute name="t-if">showCashMoveButton and this.pos.cashier?._role != 'minimal' and !this.pos.cashier?.sbl_hide_pos_dropdown_cash_inout</attribute>
+            <attribute name="t-if">this.showCashMoveButton and this.pos.cashier?._role != 'minimal' and !this.pos.cashier?.sbl_hide_pos_dropdown_cash_inout</attribute>
         </xpath>
 
         <!-- Hide Reload Data dropdown item -->
@@ -39,17 +39,17 @@
 
         <!-- Hide Create Product dropdown item -->
         <xpath expr="//DropdownItem[contains(@onSelected, 'this.pos.editProduct()')]" position="attributes">
-            <attribute name="t-if">showCreateProductButton and !this.pos.cashier?.sbl_hide_pos_dropdown_create_product</attribute>
+            <attribute name="t-if">this.showCreateProductButton and !this.pos.cashier?.sbl_hide_pos_dropdown_create_product</attribute>
         </xpath>
 
         <!-- Hide Barcode Scanner dropdown item -->
         <xpath expr="//DropdownItem[contains(@onSelected, 'this.onClickScan()')]" position="attributes">
-            <attribute name="t-if">isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and ui.isSmall and !pos.config.module_pos_restaurant and !this.pos.cashier?.sbl_hide_pos_dropdown_barcode_scanner</attribute>
+            <attribute name="t-if">this.isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant and !this.pos.cashier?.sbl_hide_pos_dropdown_barcode_scanner</attribute>
         </xpath>
 
         <!-- Hide Print Report dropdown item -->
         <xpath expr="//DropdownItem[contains(@onSelected, 'this.showSaleDetails()')]" position="attributes">
-            <attribute name="t-if">hardwareProxy.printer and !this.pos.cashier?.sbl_hide_pos_dropdown_print_report</attribute>
+            <attribute name="t-if">this.hardwareProxy.printer and !this.pos.cashier?.sbl_hide_pos_dropdown_print_report</attribute>
         </xpath>
 
         <!-- Hide Backend dropdown item -->
@@ -61,19 +61,20 @@
         <xpath expr="//DropdownItem[contains(@onSelected, 'this.pos.closeSession()')]" position="attributes">
             <attribute name="t-if">!this.pos.cashier?.sbl_hide_pos_dropdown_close_register</attribute>
         </xpath>
+
         <!-- Total Session (Register) dropdown item -->
         <xpath expr="//DropdownItem[contains(@onSelected, 'this.pos.closeSession()')]" position="before">
             <DropdownItem t-if="!this.pos.cashier?.sbl_hide_pos_dropdown_total_session">
-                <t t-call-assets="web.assets_qweb" />
                 <TotalSession/>
             </DropdownItem>
         </xpath>
     </t>
 
-    <t t-name="sensible_pos.TotalSession">
+    <t t-name="pos_access_rights_employee.TotalSession">
         <div class="text-center" style="min-width:120px;">
-            <div class="font-weight-bold" style="line-height:1rem;">Total Session:</div>
-            <div class="h5 mb-0" t-esc="state.amount ? pos.env.utils.formatCurrency(state.amount) : '-'"/>
+            <div class="fw-bold" style="line-height:1rem;">Total Session:</div>
+            <div class="h5 mb-0"
+                 t-out="this.state.amount !== null ? this.env.utils.formatCurrency(this.state.amount) : '-'"/>
         </div>
     </t>
 
