@@ -1,8 +1,9 @@
 /** @odoo-module */
 
-import { Navbar } from "@point_of_sale/app/components/navbar/navbar";
+import { BurgerMenuDialog } from "@point_of_sale/app/components/navbar/burger_menu/burger_menu_dialog";
+import { patch } from "@web/core/utils/patch";
 import TotalSession from "./total_session";
 
-Navbar.components = Object.assign({}, Navbar.components, { TotalSession });
-
-export default Navbar;
+patch(BurgerMenuDialog, {
+    components: { ...BurgerMenuDialog.components, TotalSession },
+});

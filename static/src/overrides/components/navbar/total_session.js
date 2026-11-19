@@ -1,7 +1,8 @@
 /** @odoo-module */
 
-import { Component, proxy, onMounted } from "@odoo/owl";
+import { Component, onMounted, proxy } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/hooks/pos_hook";
+import { formatCurrency } from "@web/core/currency";
 
 export class TotalSession extends Component {
     static template = "pos_access_rights_employee.TotalSession";
@@ -25,6 +26,20 @@ export class TotalSession extends Component {
                     this.state.amount = 0;
                 });
         });
+    }
+
+    get formattedAmount() {
+        if (this.state.amount === null) {
+            return "-";
+        }
+        const currencyId = this.pos?.currency?.id || this.pos?.config?.currency_id?.id;
+        try {
+            return currencyId
+                ? formatCurrency(this.state.amount, currencyId)
+                : Number(this.state.amount).toFixed(2);
+        } catch {
+            return Number(this.state.amount).toFixed(2);
+        }
     }
 }
 

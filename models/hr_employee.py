@@ -71,6 +71,10 @@ class ResUsers(models.Model):
         res = super()._load_pos_data_fields(config)
         return list(set(res + POS_ACCESS_FIELDS))
 
+    @api.model
+    def load_pos_data_force_loading(self):
+        return True
+
 
 class HrEmployee(models.Model):
     _inherit = 'hr.employee'

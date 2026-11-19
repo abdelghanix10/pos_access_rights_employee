@@ -2,79 +2,78 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_access_rights_employee.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <!-- Hide entire Dropdown menu -->
-        <xpath expr="//Dropdown" position="attributes">
+        <!-- Hide Burger Menu button -->
+        <xpath expr="//button[@t-on-click='this.openBurgerMenu']" position="attributes">
             <attribute name="t-if">!this.pos.cashier?.sbl_hide_pos_dropdown_navbar</attribute>
         </xpath>
 
         <!-- Hide Barcode Scanner button in navbar -->
-        <xpath expr="//button[contains(@t-on-click, 'onClickScan')]" position="attributes">
-            <attribute name="t-if">(this.isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.state.current) and !this.pos.config.module_pos_restaurant) and (!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_barcode_button)</attribute>
+        <xpath expr="//button[@t-on-click='this.onClickScan']" position="attributes">
+            <attribute name="t-if">(this.isBarcodeScannerSupported() and ['ProductScreen', 'TicketScreen'].includes(this.pos.router.currentScreen()) and !this.pos.config.module_pos_restaurant) and (!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_barcode_button)</attribute>
         </xpath>
 
         <!-- Hide Search Input in navbar -->
         <xpath expr="//Input" position="attributes">
             <attribute name="t-if">this.pos.showSearchButton() and (!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_search_input)</attribute>
         </xpath>
+    </t>
+
+    <t t-name="pos_access_rights_employee.BurgerMenuDialog" t-inherit="point_of_sale.BurgerMenuDialog" t-inherit-mode="extension">
+        <!-- Show Total Session banner at top of menu -->
+        <xpath expr="//div[hasclass('o_pos_burger_menu_buttons')]" position="before">
+            <TotalSession t-if="!this.pos.cashier?.sbl_hide_pos_dropdown_total_session"/>
+        </xpath>
 
         <!-- Hide Customer Display -->
-        <xpath expr="//span[contains(@t-on-click, 'openCustomerDisplay')]" position="attributes">
-            <attribute name="t-if">(!this.pos.cashier or !this.pos.cashier.sbl_hide_pos_customer_display)</attribute>
+        <xpath expr="//t[@t-name='customer_display']" position="attributes">
+            <attribute name="t-if">this.pos.accessRight.canAccessCustomerDisplay and !this.pos.cashier?.sbl_hide_pos_customer_display</attribute>
         </xpath>
 
-        <!-- Hide Install App dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'window.open(this.appUrl)')]" position="attributes">
-            <attribute name="t-if">!this.isDisplayStandalone and this.pos.cashier?._role != 'minimal' and !this.pos.cashier?.sbl_hide_pos_dropdown_install_app</attribute>
+        <!-- Hide Install App -->
+        <xpath expr="//t[@t-name='install-app']" position="attributes">
+            <attribute name="t-if">!this.isDisplayStandalone and this.pos.accessRight.canInstallApp and !this.pos.cashier?.sbl_hide_pos_dropdown_install_app</attribute>
         </xpath>
 
-        <!-- Hide Cash In/Out dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'this.pos.cashMove()')]" position="attributes">
-            <attribute name="t-if">this.showCashMoveButton and this.pos.cashier?._role != 'minimal' and !this.pos.cashier?.sbl_hide_pos_dropdown_cash_inout</attribute>
+        <!-- Hide Cash In/Out -->
+        <xpath expr="//t[contains(@onClick, 'this.pos.cashMove()')]" position="attributes">
+            <attribute name="t-if">this.showCashMoveButton and this.pos.accessRight.canCashMove and !this.pos.cashier?.sbl_hide_pos_dropdown_cash_inout</attribute>
         </xpath>
 
-        <!-- Hide Reload Data dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'this.reloadProducts()')]" position="attributes">
+        <!-- Hide Reload Data -->
+        <xpath expr="//t[contains(@onClick, 'this.pos.reloadData')]" position="attributes">
             <attribute name="t-if">!this.pos.data.network.offline and !this.pos.cashier?.sbl_hide_pos_dropdown_reload_data</attribute>
         </xpath>
 
-        <!-- Hide Create Product dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'this.pos.editProduct()')]" position="attributes">
+        <!-- Hide Create Product -->
+        <xpath expr="//t[@t-name='create_product']" position="attributes">
             <attribute name="t-if">this.showCreateProductButton and !this.pos.cashier?.sbl_hide_pos_dropdown_create_product</attribute>
         </xpath>
 
-        <!-- Hide Barcode Scanner dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'this.onClickScan()')]" position="attributes">
-            <attribute name="t-if">this.isBarcodeScannerSupported() and this.pos.router.state.current == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant and !this.pos.cashier?.sbl_hide_pos_dropdown_barcode_scanner</attribute>
+        <!-- Hide Barcode Scanner -->
+        <xpath expr="//t[contains(@onClick, 'this.onClickScan()')]" position="attributes">
+            <attribute name="t-if">this.isBarcodeScannerSupported() and this.pos.router.currentScreen() == 'ProductScreen' and this.ui.isSmall and !this.pos.config.module_pos_restaurant and !this.pos.cashier?.sbl_hide_pos_dropdown_barcode_scanner</attribute>
         </xpath>
 
-        <!-- Hide Print Report dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'this.showSaleDetails()')]" position="attributes">
-            <attribute name="t-if">this.hardwareProxy.printer and !this.pos.cashier?.sbl_hide_pos_dropdown_print_report</attribute>
+        <!-- Hide Print Report -->
+        <xpath expr="//t[contains(@onClick, 'this.showSaleDetails()')]" position="attributes">
+            <attribute name="t-if">this.pos.ticketPrinter.hasReceiptPrinters and this.pos.accessRight.canPrintReport and !this.pos.cashier?.sbl_hide_pos_dropdown_print_report</attribute>
         </xpath>
 
-        <!-- Hide Backend dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'pos.closePos()')]" position="attributes">
-            <attribute name="t-if">!this.pos.cashier?.sbl_hide_pos_dropdown_backend</attribute>
+        <!-- Hide Backend -->
+        <xpath expr="//t[@t-name='backend']" position="attributes">
+            <attribute name="t-if">this.pos.accessRight.canGoToBackend and !this.pos.cashier?.sbl_hide_pos_dropdown_backend</attribute>
         </xpath>
 
-        <!-- Hide Close Register dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'this.pos.closeSession()')]" position="attributes">
-            <attribute name="t-if">!this.pos.cashier?.sbl_hide_pos_dropdown_close_register</attribute>
-        </xpath>
-
-        <!-- Total Session (Register) dropdown item -->
-        <xpath expr="//DropdownItem[contains(@onSelected, 'this.pos.closeSession()')]" position="before">
-            <DropdownItem t-if="!this.pos.cashier?.sbl_hide_pos_dropdown_total_session">
-                <TotalSession/>
-            </DropdownItem>
+        <!-- Hide Close Register -->
+        <xpath expr="//t[@t-name='close_register']" position="attributes">
+            <attribute name="t-if">this.pos.accessRight.canCloseSession and !this.pos.cashier?.sbl_hide_pos_dropdown_close_register</attribute>
         </xpath>
     </t>
 
     <t t-name="pos_access_rights_employee.TotalSession">
-        <div class="text-center" style="min-width:120px;">
-            <div class="fw-bold" style="line-height:1rem;">Total Session:</div>
-            <div class="h5 mb-0"
-                 t-out="this.state.amount !== null ? this.env.utils.formatCurrency(this.state.amount) : '-'"/>
+        <div class="d-flex align-items-center justify-content-between px-3 py-2 mb-3 rounded-3 bg-light border">
+            <span class="fw-semibold text-muted">Total Session</span>
+            <span class="fs-5 fw-bold text-dark" t-out="this.formattedAmount"/>
         </div>
     </t>
 
